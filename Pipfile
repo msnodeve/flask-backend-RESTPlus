@@ -15,6 +15,7 @@ flask-sqlalchemy = "*"
 flask-migrate = "*"
 pymysql = "*"
 flask-restplus = "*"
+flask-bootstrap = "*"
 
 [requires]
 python_version = "3.7"

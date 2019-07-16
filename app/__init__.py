@@ -2,11 +2,12 @@
     app init
 """
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_restplus import Resource, Api, fields, reqparse
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql import text
+from flask_bootstrap import Bootstrap
 
 DB = SQLAlchemy()
 SQLALCHEMY_DATABASE_URI = \
@@ -40,6 +41,7 @@ def create_app() -> (Flask):
     # 나중에 config는 다 빼야 할 것 같다.
     app = Flask(__name__)
     app.app_context().push()
+    Bootstrap(app)
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI.format(
         USER="root",
         PASSWORD="1234",
@@ -96,12 +98,20 @@ def create_app() -> (Flask):
                 DB.session.close()
             return message
 
+
+
     """ app.route part """
     # 나중에 route는 다 빼야 할 것 같다.
     @app.route("/index")
     def index():
         """ / url index """
-        return "<h1>Hello World ! <br> This is index page</h1>"
+        return render_template('/index.html')
     
+    @app.route("/register")
+    def register():
+        """ 회원가입 페이지 """
+        return render_template('/register.html')        
+
+
     """ return part """
     return app
