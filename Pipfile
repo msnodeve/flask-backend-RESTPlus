@@ -11,6 +11,9 @@ pylint = "*"
 [packages]
 flask = "*"
 flask-script = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+pymysql = "*"
 
 [requires]
 python_version = "3.7"

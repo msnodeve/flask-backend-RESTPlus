@@ -6,3 +6,6 @@
 
 # python
 __pycache__
+
+# database
+migrations
