@@ -4,3 +4,9 @@ from sqlalchemy.exc import IntegrityError
 from marshmallow import ValidationError
 from app.constants import STATUS_CODE
 from flask_restplus import reqparse
+
+DB = SQLAlchemy()
+
+class CRUD:
+    
+    def add()
