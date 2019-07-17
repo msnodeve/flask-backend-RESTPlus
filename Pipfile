@@ -7,6 +7,7 @@ verify_ssl = true
 pytest = "*"
 pytest-cov = "*"
 pylint = "*"
+autopep8 = "*"
 
 [packages]
 flask = "*"
@@ -16,6 +17,7 @@ flask-migrate = "*"
 pymysql = "*"
 flask-restplus = "*"
 flask-marshmallow = "*"
+marshmallow-jsonapi = "*"
 
 [requires]
 python_version = "3.7"
