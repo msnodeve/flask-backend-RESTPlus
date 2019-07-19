@@ -60,3 +60,7 @@ class CRUD:
         response = (self.body, self.status_code.value)
         response = make_response(response)
         return response
+
+    def select(self, name, password):
+        
+        return "test"
