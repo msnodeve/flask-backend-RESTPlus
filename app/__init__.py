@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql import text
 from flask_marshmallow import Marshmallow
 from app.api.database import DB
-from app.users.views import API
+from app.api import  REST_API
 
 SQLALCHEMY_DATABASE_URI = \
     ("mysql+pymysql://{USER}:{PASSWORD}@{ADDR}:{PORT}/{NAME}?charset=utf8")
@@ -16,8 +16,6 @@ SQLALCHEMY_DATABASE_URI = \
 MA = Marshmallow()
 def create_app() -> (Flask):
     """ create_app() 함수를 호출해 앱을 초기화 """
-
-
 
     """ app config part """
     # 나중에 config는 다 빼야 할 것 같다.
@@ -33,7 +31,7 @@ def create_app() -> (Flask):
     app.config['SQLALCHEMY_ECHO'] = True
     app.config['DEBUG'] = True
     DB.init_app(app)
-    API.init_app(app)
+    REST_API.init_app(app)
     MA.init_app(app)
 
     """ return part """
