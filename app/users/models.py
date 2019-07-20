@@ -9,8 +9,8 @@ class Users(DB.Model):
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = DB.Column(DB.Integer, primary_key=True)
-    name = DB.Column(DB.String(255), nullable=False)
-    email = DB.Column(DB.String(50), unique=True, nullable=False)
+    name = DB.Column(DB.String(255), unique=True, nullable=False)
+    email = DB.Column(DB.String(50), nullable=False)
     password = DB.Column(DB.String(255), nullable=False)
     created = DB.Column(DB.TIMESTAMP, server_default=text(
         "CURRENT_TIMESTAMP"), nullable=False)

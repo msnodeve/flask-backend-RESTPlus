@@ -12,7 +12,7 @@ API = Namespace('Users',description="User's REST API")
 
 USERS_SCHEMA = UsersSchema()
 
-@API.route('/users/<int:user_id>')
+@API.route('<int:user_id>')
 @API.param('user_id', 'The user identifier')
 class UserItem(Resource):
     parser = reqparse.RequestParser()
@@ -48,7 +48,7 @@ class UserItem(Resource):
         return response
 
 
-@API.route('/users')
+@API.route('')
 class UsersList(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('name', required=True, type=str, help="user's name", location='json')
@@ -82,7 +82,7 @@ class UsersList(Resource):
             code = HTTPStatus.INTERNAL_SERVER_ERROR
         return make_response(body, code.value)
 
-@API.route('/users/auth')
+@API.route('/auth')
 class GetUser(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('name', required=True, type=str, help="user's name", location='json')
@@ -97,7 +97,7 @@ class GetUser(Resource):
     def post(self):
         args = self.parser.parse_args()
         try:
-            user = Users.query.filter(Users.name == args['name'] and Users.password == args['password']).first()
+            user = Users.query.filter(Users.name == args['name'], Users.password == args['password']).first()
             body = jsonify({"user" : USERS_SCHEMA.dump(user).data})
             if user:
                 code = HTTPStatus.OK
