@@ -12,9 +12,10 @@ from app.api import REST_API
 
 SQLALCHEMY_DATABASE_URI = \
     ("mysql+pymysql://{USER}:{PASSWORD}@{ADDR}:{PORT}/{NAME}?charset=utf8")
-    
+
 # 설명할 API에 대한 것
 MA = Marshmallow()
+
 def create_app() -> (Flask):
     """ create_app() 함수를 호출해 앱을 초기화 """
 

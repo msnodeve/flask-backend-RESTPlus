@@ -8,6 +8,8 @@ from app.constants import STATUS_CODE
 from app.constants import GET, POST, PATCH, DELETE
 from app.posts.models import Post, PostSchema
 from app.api.database import DB
+from app.api.auth_type import login_required
+from app.api.auth_type import BASIC_AUTH, ACCESS_TOKEN, SECERET_KEY
 
 API = Namespace('Posts', description="Post's REST API")
 
@@ -32,6 +34,8 @@ class Posts(Resource):
     parser.add_argument('author_id', required=True, type=int,
                         help="post's author", location='json')
 
+    @API.doc(responses=GET, security=ACCESS_TOKEN)
+    @login_required
     def get(self):
         try:
             posts_query = Post.query.all()

@@ -1,7 +1,7 @@
 
 import jwt
-import bcrypt
 import datetime
+import bcrypt
 from http import HTTPStatus
 from flask import jsonify
 from flask import make_response
@@ -13,6 +13,7 @@ from app.constants import STATUS_CODE
 from app.constants import GET, POST, PATCH, DELETE
 from app.api.database import DB
 from app.api.auth_type import BASIC_AUTH, ACCESS_TOKEN, SECERET_KEY
+from app.api.auth_type import login_required
 
 API = Namespace('Users', description="User's REST API")
 
@@ -75,6 +76,7 @@ class UsersList(Resource):
         'password': fields.String
     })
     @API.doc(responses=GET, security=ACCESS_TOKEN)
+    @login_required
     def get(self):
         users_query = Users.query.all()
         results = USERS_SCHEMA.dump(users_query, many=True).data
@@ -83,7 +85,10 @@ class UsersList(Resource):
     @API.expect(user_field)
     def post(self):
         args = self.parser.parse_args()
-        user = Users(args['name'], args['email'], args['password'])
+        temp = args['password']
+        hash_pw = bcrypt.hashpw(temp.encode(), bcrypt.gensalt())
+        t1 = bcrypt.checkpw(temp.encode(), hash_pw)
+        user = Users(args['name'], args['email'], hash_pw)
         try:
             DB.session.add(user)
             DB.session.commit()
@@ -110,20 +115,19 @@ class GetUser(Resource):
         'password': fields.String
     })
 
-    @API.doc(responses=POST, security=ACCESS_TOKEN)
+    @API.doc(responses=POST)
     @API.expect(user_field)
     def post(self):
         args = self.parser.parse_args()
         try:
-            #, Users.password == args['password']
             user = Users.query.filter(Users.name == args['name']).first()
-            if bcrypt.checkpw(args['password'].encode("UTF-8"), user.password.encode("UTF-8")):
+            if bcrypt.checkpw(args['password'].encode('utf-8'), user.password.encode('utf-8')):
                 #여기서 이제 토큰 발급해서 보내주기
                 payload = {
-                    "exp" : str(datetime.date.today())
+                    'user_id' : user.name
                 }
                 token = jwt.encode(payload, SECERET_KEY, "HS256")
-                body = jsonify({"access_token": token.decode("UTF-8"), "user": USERS_SCHEMA.dump(user).data})
+                body = jsonify({"access_token": token.decode('utf-8'), "user": {"id" : user.id}})
             if user:
                 code = HTTPStatus.OK
             else:
