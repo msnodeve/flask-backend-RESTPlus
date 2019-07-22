@@ -1,0 +1,17 @@
+version: '3'
+services: # 쓰고자하는 서비스
+  mysql: # 사용자가 원하는 이름
+    image: mysql:5.7 # 이미지는 mysql 5.7을 다운받아 사용할 것
+    hostname: mysql
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always # 시스템을 다시 껐다 켜도 항상 재시작
+    ports:
+      - "3306:3306" # 23306 포트로 접속하면 내부에서 3306포트로 전송
+    env_file:
+      - ./confs/database/mysql/.env # 환경 변수들을 따로 지정해줘도 되지만 파일로 떼어놓음
+    volumes:
+      - 'mysql-data:/var/lib/mysql'
+
+volumes:
+  mysql-data:
