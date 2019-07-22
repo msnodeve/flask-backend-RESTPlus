@@ -8,10 +8,11 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql import text
 from flask_marshmallow import Marshmallow
 from app.api.database import DB
-from app.api import  REST_API
+from app.api import REST_API
 
 SQLALCHEMY_DATABASE_URI = \
     ("mysql+pymysql://{USER}:{PASSWORD}@{ADDR}:{PORT}/{NAME}?charset=utf8")
+    
 # 설명할 API에 대한 것
 MA = Marshmallow()
 def create_app() -> (Flask):

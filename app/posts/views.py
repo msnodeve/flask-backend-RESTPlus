@@ -20,7 +20,6 @@ POST_FIELDS = API.model('Post', {
     'author_id': fields.Integer,
 })
 
-
 @API.route('')
 class Posts(Resource):
     parser = reqparse.RequestParser()

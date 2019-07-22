@@ -1,24 +1,34 @@
+
+import jwt
+import bcrypt
+import datetime
 from http import HTTPStatus
 from flask import jsonify
 from flask import make_response
+from flask import request
 from app.users.models import Users, UsersSchema
 from sqlalchemy.exc import SQLAlchemyError
 from flask_restplus import Api, Namespace, fields, reqparse, Resource
 from app.constants import STATUS_CODE
 from app.constants import GET, POST, PATCH, DELETE
 from app.api.database import DB
+from app.api.auth_type import BASIC_AUTH, ACCESS_TOKEN, SECERET_KEY
 
-API = Namespace('Users',description="User's REST API")
+API = Namespace('Users', description="User's REST API")
 
 USERS_SCHEMA = UsersSchema()
 
-@API.route('<int:user_id>')
+
+@API.route('/<int:user_id>')
 @API.param('user_id', 'The user identifier')
 class UserItem(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('name', required=True, type=str, help="user's name", location='json')
-    parser.add_argument('email', required=True, type=str, help="user's email", location='json')
-    parser.add_argument('password', required=True, type=str, help="password", location='json')
+    parser.add_argument('name', required=True, type=str,
+                        help="user's name", location='json')
+    parser.add_argument('email', required=True, type=str,
+                        help="user's email", location='json')
+    parser.add_argument('password', required=True, type=str,
+                        help="password", location='json')
 
     user_field = API.model('Users', {
         'name': fields.String,
@@ -29,6 +39,7 @@ class UserItem(Resource):
     @API.doc(responses=GET)
     def get(self, user_id):
         user = Users.query.get_or_404(user_id)
+        Users.session.close()
         user = USERS_SCHEMA.dump(user).data
         return user
 
@@ -48,19 +59,22 @@ class UserItem(Resource):
         return response
 
 
-@API.route('')
+@API.route('s')
 class UsersList(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('name', required=True, type=str, help="user's name", location='json')
-    parser.add_argument('email', required=True, type=str, help="user's email", location='json')
-    parser.add_argument('password', required=True, type=str, help="password", location='json')
+    parser.add_argument('name', required=True, type=str,
+                        help="user's name", location='json')
+    parser.add_argument('email', required=True, type=str,
+                        help="user's email", location='json')
+    parser.add_argument('password', required=True, type=str,
+                        help="password", location='json')
 
     user_field = API.model('Users', {
         'name': fields.String,
         'email': fields.String,
         'password': fields.String
     })
-
+    @API.doc(responses=GET, security=ACCESS_TOKEN)
     def get(self):
         users_query = Users.query.all()
         results = USERS_SCHEMA.dump(users_query, many=True).data
@@ -82,30 +96,40 @@ class UsersList(Resource):
             code = HTTPStatus.INTERNAL_SERVER_ERROR
         return make_response(body, code.value)
 
+
 @API.route('/auth')
 class GetUser(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('name', required=True, type=str, help="user's name", location='json')
-    parser.add_argument('password', required=True, type=str, help="user's password", location='json')
+    parser.add_argument('name', required=True, type=str,
+                        help="user's name", location='json')
+    parser.add_argument('password', required=True, type=str,
+                        help="user's password", location='json')
 
     user_field = API.model('Auth', {
         'name': fields.String,
         'password': fields.String
     })
 
+    @API.doc(responses=POST, security=ACCESS_TOKEN)
     @API.expect(user_field)
     def post(self):
         args = self.parser.parse_args()
         try:
-            user = Users.query.filter(Users.name == args['name'], Users.password == args['password']).first()
-            body = jsonify({"user" : USERS_SCHEMA.dump(user).data})
+            #, Users.password == args['password']
+            user = Users.query.filter(Users.name == args['name']).first()
+            if bcrypt.checkpw(args['password'].encode("UTF-8"), user.password.encode("UTF-8")):
+                #여기서 이제 토큰 발급해서 보내주기
+                payload = {
+                    "exp" : str(datetime.date.today())
+                }
+                token = jwt.encode(payload, SECERET_KEY, "HS256")
+                body = jsonify({"access_token": token.decode("UTF-8"), "user": USERS_SCHEMA.dump(user).data})
             if user:
                 code = HTTPStatus.OK
             else:
                 code = HTTPStatus.NOT_FOUND
         except SQLAlchemyError as err:
             message = str(err)
-            body = jsonify({"message" : message})
+            body = jsonify({"message": message})
             code = HTTPStatus.INTERNAL_SERVER_ERROR
         return make_response(body, code.value)
-

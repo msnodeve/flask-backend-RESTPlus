@@ -18,6 +18,9 @@ flask-restplus = "*"
 flask-marshmallow = "*"
 marshmallow-jsonapi = "*"
 flask-script = "*"
+flask-basicauth = "*"
+pyjwt = "*"
+bcrypt = "*"
 
 [requires]
 python_version = "3.7"
