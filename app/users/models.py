@@ -2,11 +2,11 @@
     Users models file
 """
 from sqlalchemy.sql import text
-from app.api.database import DB, MA
+from app.api.database import DB, MA, CRUD
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, fields, validate
 
-class Users(DB.Model):
+class Users(DB.Model, CRUD):
     __tablename__ = 'users'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
@@ -16,7 +16,7 @@ class Users(DB.Model):
     user_email = DB.Column(DB.String(255), nullable=False)
     created = DB.Column(DB.TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"), nullable=False)
 
-    def __init__(self, user_id, user_password, user_email):
+    def __init__(self, user_id : str, user_password : str, user_email : str):
         self.user_id = user_id
         self.user_password = user_password
         self.user_email = user_email

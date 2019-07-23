@@ -2,12 +2,12 @@
     Posts model file
 """
 
-from app.api.database import DB, MA
+from app.api.database import DB, MA, CRUD
 from marshmallow import Schema, fields, validate
 from app.users.models import Users, UsersSchema
 from sqlalchemy.sql import text
 
-class Posts(DB.Model):
+class Posts(DB.Model, CRUD):
     __tablename__ = 'posts'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 

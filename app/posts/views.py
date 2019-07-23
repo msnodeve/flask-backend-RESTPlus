@@ -31,7 +31,10 @@ class Post(Resource):
         try:
             posts = Posts.query.all()
             body = jsonify(POSTS_SCHEMA.dump(posts, many=True).data)
-            code = HTTPStatus.OK
+            if posts:
+                code = HTTPStatus.OK
+            else:
+                code = HTTPStatus.NOT_FOUND
         except SQLAlchemyError as err:
             body = jsonify({'message' : str(err)})
             code = HTTPStatus.INTERNAL_SERVER_ERROR
@@ -42,15 +45,7 @@ class Post(Resource):
     def post(self):
         args_ = self.parser.parse_args()
         post = Posts(author_id=args_['author_id'], title=args_['title'], body=args_['body'])
-        try:
-            DB.session.add(post)
-            DB.session.commit()
-            body = jsonify({'post', POSTS_SCHEMA.dump(post).data})
-            code = HTTPStatus.OK
-        except SQLAlchemyError as err:
-            body = jsonify({'message' : str(err)})
-            code = HTTPStatus.INTERNAL_SERVER_ERROR
-        return make_response(body, code.value)
+        return post.add(post, POSTS_SCHEMA)
 
 @API.route('/<int:reqno>')
 class PostItem(Resource):
@@ -58,8 +53,11 @@ class PostItem(Resource):
         try:
             post = DB.session.query(Posts).outerjoin(
                 Users, Users.user_id == Posts.author_id).filter(Posts.id==reqno).first()
-            body = jsonify({'post' : POSTS_SCHEMA.dump(post).data})
-            code = HTTPStatus.OK
+            body = POSTS_SCHEMA.dump(post).data
+            if post:
+                code = HTTPStatus.OK
+            else:
+                code = HTTPStatus.NOT_FOUND
         except SQLAlchemyError as err:
             body = jsonify({'message' : str(err)})
             code = HTTPStatus.INTERNAL_SERVER_ERROR

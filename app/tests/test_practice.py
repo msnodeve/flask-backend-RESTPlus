@@ -18,5 +18,3 @@ def test_practice():
         except ValueError as err:
             message = str(err)
             print(message)
-        print(result)
-        assert False

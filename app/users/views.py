@@ -18,7 +18,7 @@ class UsersAuth(Resource):
     parser.add_argument('user_password', required=True, type=str, help="User's PW", location='json')
     parser.add_argument('user_email', required=True, type=str, help="User's Email", location='json')
 
-    users_field = API.model('Sign up', {
+    users_field = API.model('userRegister', {
         'user_id' : fields.String,
         'user_password' : fields.String,
         'user_email' : fields.String
@@ -29,16 +29,7 @@ class UsersAuth(Resource):
     def post(self):
         args_ = self.parser.parse_args()
         user = Users(args_['user_id'], args_['user_password'], args_['user_email'])
-        try:
-            DB.session.add(user)
-            DB.session.commit()
-            body = jsonify({'users' : USERS_SCHEMA.dump(user).data})
-            code = HTTPStatus.OK
-        except SQLAlchemyError as err:
-            DB.session.rollback()
-            body = jsonify({'message' : str(err)})
-            code = HTTPStatus.INTERNAL_SERVER_ERROR
-        return make_response(body, code.value)
+        return user.add(user, USERS_SCHEMA)
 
 @API.route('/auth')
 class UserAuth(Resource):
@@ -46,7 +37,7 @@ class UserAuth(Resource):
     parser.add_argument('user_id', required=True, type=str, help="User's ID", location='json')
     parser.add_argument('user_password', required=True, type=str, help="User's PW", location='json')
 
-    user_login_field = API.model('Sign in', {
+    user_login_field = API.model('userLogin', {
         'user_id' : fields.String,
         'user_password' : fields.String
     })
@@ -56,9 +47,12 @@ class UserAuth(Resource):
     def post(self):
         args_ = self.parser.parse_args()
         try:
-            user = Users.query.filter(Users.user_id == args_['user_id']).first()
+            user = Users.query.filter(Users.user_id == args_['user_id'], Users.user_password  == args_['user_password']).first()
             body = jsonify({'user_id' : user.user_id})
-            code = HTTPStatus.OK
+            if user:
+                code = HTTPStatus.OK
+            else:
+                code = HTTPStatus.NOT_FOUND
         except SQLAlchemyError as err:
             body = jsonify({'message' : str(err)})
             code = HTTPStatus.INTERNAL_SERVER_ERROR
