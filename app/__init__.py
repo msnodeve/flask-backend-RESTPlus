@@ -4,6 +4,7 @@
 
 from flask import Flask
 from app.api.database import DB, MA
+from app.api import REST_API
 from app.constants import SQLALCHEMY_DATABASE_URI_FORMAT
 
 
@@ -17,11 +18,7 @@ def create_app()->(Flask):
     app.config['DEBUG'] = True
 
     DB.init_app(app)
+    REST_API.init_app(app)
     MA.init_app(app)
-
-    @app.route('/')
-    def root():
-        """ main page """
-        return "Hello World!"
-
+    
     return app
