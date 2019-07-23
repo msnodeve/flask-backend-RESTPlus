@@ -2,9 +2,11 @@
 .venv
 
 # vscode
+.DS_Store
 .vscode
 
 # python
 __pycache__
 
-# database
+# testcode
+.pytest_cache

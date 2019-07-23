@@ -11,7 +11,6 @@ services: # 쓰고자하는 서비스
     env_file:
       - ./confs/database/mysql/.env # 환경 변수들을 따로 지정해줘도 되지만 파일로 떼어놓음
     volumes:
-      - 'mysql-data:/var/lib/mysql'
-
+          - mysql:/var/lib/mysql
 volumes:
-  mysql-data:
+  mysql:
