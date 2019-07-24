@@ -9,6 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.posts.models import Posts, PostsSchema
 from app.users.models import Users, UsersSchema
 from app.api.database import DB
+from app.api.auth_type import confirm_token, ACCESS_TOKEN, BASIC_AUTH
 
 API = Namespace('Posts', description="Post's REST API")
 POSTS_SCHEMA = PostsSchema()
@@ -41,7 +42,8 @@ class Post(Resource):
         return make_response(body, code.value)
 
     @API.expect(post_field)
-    @API.doc('post')
+    @confirm_token
+    @API.doc('post', security=ACCESS_TOKEN)
     def post(self):
         args_ = self.parser.parse_args()
         post = Posts(author_id=args_['author_id'], title=args_['title'], body=args_['body'])
@@ -49,6 +51,8 @@ class Post(Resource):
 
 @API.route('/<int:reqno>')
 class PostItem(Resource):
+    @confirm_token
+    @API.doc('get', security=ACCESS_TOKEN)
     def get(self, reqno):
         try:
             post = DB.session.query(Posts).outerjoin(

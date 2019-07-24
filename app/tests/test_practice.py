@@ -18,3 +18,5 @@ def test_practice():
         except ValueError as err:
             message = str(err)
             print(message)
+    result = worker.work()
+    assert result == "work"
