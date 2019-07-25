@@ -1,33 +1,33 @@
-from app.api.database import DB, CRUD
-from marshmallow import Schema, fields
-from flask_sqlalchemy import SQLAlchemy
-from marshmallow import validate
-from sqlalchemy.sql import text
-from app.users.models import Users, UsersSchema
+"""
+    Posts model file
+"""
 
-class Post(DB.Model):
+from app.api.database import DB, MA, CRUD
+from marshmallow import Schema, fields, validate
+from app.users.models import Users, UsersSchema
+from sqlalchemy.sql import text
+
+class Posts(DB.Model, CRUD):
     __tablename__ = 'posts'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = DB.Column(DB.Integer, primary_key=True)
-    author_id = DB.Column(DB.Integer, DB.ForeignKey(Users.id))
-    name = DB.Column(DB.String(255), nullable=False)
-    title = DB.Column(DB.String(255), nullable=False)
+    author_id = DB.Column(DB.String(255), DB.ForeignKey(Users.user_id))
+    title = DB.Column(DB.String(512), nullable=False)
     body = DB.Column(DB.String(1024), nullable=False)
-    author = DB.relationship("Users", uselist=False)
-    created = DB.Column(DB.TIMESTAMP, server_default=text(
-        "CURRENT_TIMESTAMP"), nullable=False)
+    author = DB.relationship('Users', uselist=False)
+    created = DB.Column(DB.TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"), nullable=False)
 
-    def __init__(self, name: str, title : str, body : str, author_id: int):
-        self.name = name
+    def __init__(self, author_id, title, body):
+        self.author_id = author_id
         self.title = title
         self.body = body
-        self.author_id = author_id
 
-class PostSchema(Schema):
+class PostsSchema(MA.Schema):
+    not_blank = validate.Length(min=1, error='Field cannot be blank')
     id = fields.Integer()
-    name = fields.Str()
-    title = fields.Str()
-    body = fields.Str()
+    author_id = fields.String(validate=not_blank)
+    title = fields.String(validate=not_blank)
+    body = fields.String(validate=not_blank)
     author = fields.Nested(UsersSchema)
-    created = fields.Str()
+    created = fields.String(validate=not_blank)

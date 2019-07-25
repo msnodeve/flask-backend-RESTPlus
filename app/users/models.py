@@ -1,42 +1,30 @@
-from app.api.database import DB
-from marshmallow import Schema, fields
-from flask_sqlalchemy import SQLAlchemy
-from marshmallow import validate
+"""
+    Users models file
+"""
 from sqlalchemy.sql import text
+from app.api.database import DB, MA, CRUD
+from flask_sqlalchemy import SQLAlchemy
+from marshmallow import Schema, fields, validate
 
-class Users(DB.Model):
+class Users(DB.Model, CRUD):
     __tablename__ = 'users'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
 
     id = DB.Column(DB.Integer, primary_key=True)
-    name = DB.Column(DB.String(255), unique=True, nullable=False)
-    email = DB.Column(DB.String(50), nullable=False)
-    password = DB.Column(DB.String(255), nullable=False)
-    created = DB.Column(DB.TIMESTAMP, server_default=text(
-        "CURRENT_TIMESTAMP"), nullable=False)
+    user_id = DB.Column(DB.String(255), unique=True, nullable=False)
+    user_password = DB.Column(DB.String(255), nullable=False)
+    user_email = DB.Column(DB.String(255), nullable=False)
+    created = DB.Column(DB.TIMESTAMP, server_default=text("CURRENT_TIMESTAMP"), nullable=False)
 
-    def __init__(self, name, email, password):
-        self.name = name
-        self.email = email
-        self.password = password
+    def __init__(self, user_id : str, user_password : str, user_email : str):
+        self.user_id = user_id
+        self.user_password = user_password
+        self.user_email = user_email
 
-
-
-class UsersSchema(Schema):
+class UsersSchema(MA.Schema):
     not_blank = validate.Length(min=1, error='Field cannot be blank')
     id = fields.Integer(dump_only=True)
-    email = fields.String(validate=not_blank)
-    name = fields.String(validate=not_blank)
-    password = fields.String(validate=not_blank)
+    user_id = fields.String(validate=not_blank)
+    user_password = fields.String(validate=not_blank)
+    user_email = fields.String(validate=not_blank)
     created = fields.String(validate=not_blank)
-
-    def get_top_level_links(self, data, many):
-        if many:
-            self_link = "/users"
-        else:
-            self_link = "/users/{}".format(data['id'])
-        return {'self': self_link}
-
-    class Meta:
-        type_ = 'users'
-        strict = True

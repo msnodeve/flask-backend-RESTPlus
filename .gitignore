@@ -2,9 +2,16 @@
 .venv
 
 # vscode
+.DS_Store
 .vscode
 
 # python
 __pycache__
 
+# testcode
+.pytest_cache
+.coverage
+cov_html
+
 # database
+migrations

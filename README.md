@@ -2,9 +2,98 @@
 
 python 개발 환경부터 API, 게시판까지 만들기
 
----
 
-### **What?**
+
+## Develop Environments
+
+***
+
+- MacBook Pro (13-inch, 2017, Four Thunderbolt 3 Ports)
+- Python 3.7
+- vscode
+- Docker-Compose version 1.23.2, build 1110ad01
+
+
+
+## Develop tools
+
+***
+
+- pipenv = pip + virtualenv
+- Flask-RESTPlus = Flask-RESTful + Swagger
+- MySQL docker container
+- Docker-compose
+
+
+
+## Project Structure
+
+***
+
+```txt
+.
+├── README.md
+├── app
+│   ├── __init__.py
+│   ├── constans.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── auth_type.py
+│   │   └── database.py
+│   ├── posts
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   └── views.py
+│   ├── users
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   └── views.py
+│   └── tests
+├── confs
+│   └── database
+│       └── mysql
+│           └── .env
+├── Pipfile
+├── Pipfile.lock
+├── Makefile
+├── docker-compose.yml
+├── .gitignore
+└── .envrc
+```
+
+
+
+## How to run
+
+***
+
+```bash
+> docker-compose up -d
+> pipenv shell
+> pipenv install --dev
+> make database
+> python manage.py run
+```
+
+
+
+## Preview
+
+***
+
+![api_image](/images/api_image.png)
+
+
+
+## Release
+
+- 2019년 7월 25일 1차 릴리즈 v1.0
+
+
+
+
+
+### What?
 
 > 왜 해야 하는가
 
@@ -12,6 +101,8 @@ python 개발 환경부터 API, 게시판까지 만들기
 2. 나의 좀 더 나은 발전을 위해
 3. 백 엔드, 프론트 엔드 까지 풀 스택을 목표로
 4. 프로페셔널한 개발자가 되기 위해서
+
+***
 
 ### **개인적 의견**
 
@@ -34,7 +125,9 @@ python 개발 환경부터 API, 게시판까지 만들기
 
 > 언제 할 것인가
 
-2019년 7월 11일부터 시작했으며 게시판을 완성할 때까지 계속할 것이다.
+2019년 7월 11일부터 시작했으며 게시판 API를 완성할 때까지 계속할 것이다.
+
+- 2019년 7월 25일 1차 릴리즈
 
 ---
 
@@ -42,4 +135,8 @@ python 개발 환경부터 API, 게시판까지 만들기
 
 > 누가 하는가
 
-알려주시는 형과 함께하지만, 당연히 혼자 머리를 싸매고 끙끙해야겠지 !
+내가 한다.
+
+
+
+이제 시작해보도록 합시다!

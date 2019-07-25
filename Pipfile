@@ -11,16 +11,13 @@ autopep8 = "*"
 
 [packages]
 flask = "*"
+flask-script = "*"
 flask-sqlalchemy = "*"
+flask-marshmallow = "*"
 flask-migrate = "*"
 pymysql = "*"
 flask-restplus = "*"
-flask-marshmallow = "*"
-marshmallow-jsonapi = "*"
-flask-script = "*"
-flask-basicauth = "*"
 pyjwt = "*"
-flask-bcrypt = "*"
 
 [requires]
 python_version = "3.7"

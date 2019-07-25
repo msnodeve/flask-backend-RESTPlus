@@ -1,8 +1,8 @@
-from flask import request
-from functools import wraps
 import jwt
+from flask import request, Response
+from functools import wraps
 
-SECERET_KEY = "Hello"
+SECERET_KEY = "Secret Hellow"
 ACCESS_TOKEN = {
     'Access Token': {
         'type': 'apiKey',
@@ -18,7 +18,7 @@ BASIC_AUTH = {
     },
 }
 
-def login_required(f):
+def confirm_token(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         access_token = request.headers['Authorization']
@@ -27,12 +27,10 @@ def login_required(f):
                 payload = jwt.decode(access_token, SECERET_KEY, "HS256")
             except jwt.InvalidTokenError:
                 payload = None
-
-            # if payload is None:
-            #     return Response(status=401)
-
+            if payload is None:
+                return Response(status=401)
             user_id = payload["user_id"]
-            # g.user = get_user_info(user_id) if user_id else None
+            # 원하는 작업
         else:
             return Response(status=401)
 
