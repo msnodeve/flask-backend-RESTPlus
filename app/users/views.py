@@ -14,7 +14,6 @@ from app.api.auth_type import SECERET_KEY
 API = Namespace('Users', description="User's RESTPlus - API")
 USERS_SCHEMA = UsersSchema()
 
-
 @API.route('s')
 class UsersAuth(Resource):
     parser = reqparse.RequestParser()
@@ -39,7 +38,6 @@ class UsersAuth(Resource):
         hash_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         user = Users(args_['user_id'], hash_pw, args_['user_email'])
         return user.add(user, USERS_SCHEMA)
-
 
 @API.route('/auth')
 class UserAuth(Resource):
