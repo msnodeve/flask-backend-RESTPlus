@@ -4,6 +4,10 @@ python 개발 환경부터 API, 게시판까지 만들기
 
 
 
+### [자세한 개발 구축 단계 설명](https://www.notion.so/msnodeve/Flask-RESTPlus-API-CRUD-Board-8ae65b4edd764a15b381579e16802a69)
+
+
+
 ## Develop Environments
 
 ***
