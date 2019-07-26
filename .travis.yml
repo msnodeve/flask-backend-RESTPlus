@@ -7,3 +7,6 @@ python:
 install:
   - docker-compose up -d
   - pipenv install --dev
+
+script:
+- echo "RESTPlus build success"
