@@ -6,9 +6,6 @@ python:
 # command to install dependencies
 install:
   - docker-compose up -d
-  - direnv allow
-  - pipenv shell
   - pipenv install --dev
-  - pipenv sync
   - make database
   - python manage.py run
