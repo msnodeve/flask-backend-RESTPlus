@@ -1,4 +1,4 @@
-# pipenv(pip + virtaulenv) 로 게시판 만들기
+# pipenv(pip + virtaulenv) 로 게시판 만들기 [![Build Status](https://travis-ci.org/msnodeve/flask-backend-RESTPlus.svg?branch=master)](https://travis-ci.org/msnodeve/flask-backend-RESTPlus)
 
 python 개발 환경부터 API, 게시판까지 만들기
 
