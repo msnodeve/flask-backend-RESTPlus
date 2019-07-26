@@ -18,6 +18,7 @@ flask-migrate = "*"
 pymysql = "*"
 flask-restplus = "*"
 pyjwt = "*"
+bcrypt = "*"
 
 [requires]
 python_version = "3.7"
