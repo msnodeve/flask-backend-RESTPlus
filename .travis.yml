@@ -3,12 +3,12 @@ language: python
 python:
   - "3.7"
   - "3.7-dev"  # 3.7 development branch
-  - "3.8-dev"  # 3.8 development branch
-  - "nightly"  # nightly build
-
 # command to install dependencies
 install:
   - docker-compose up -d
+  - direnv allow
   - pipenv shell
   - pipenv install --dev
   - pipenv sync
+  - make database
+  - python manage.py run
