@@ -75,6 +75,7 @@ python 개발 환경부터 API, 게시판까지 만들기
 > docker-compose up -d
 > pipenv shell
 > pipenv install --dev
+> pipenv sync
 > make database
 > python manage.py run
 ```

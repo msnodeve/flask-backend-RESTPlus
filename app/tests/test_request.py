@@ -1,7 +1,11 @@
+import pytest
 from http import HTTPStatus
-from app import create_app
+from app.tests.conftest import flask_app
 
-def test_url(flask_app):
-    with flask_app.test_client() as client:
-        response = client.get('/posts')
-        assert response.status_code == HTTPStatus.OK
+@pytest.fixture(scope='session')
+def test_base_route(flask_app):
+    client = flask_app.test_client()
+    url = "/"
+
+    response = client.get(url)
+    assert response.status_code == HTTPStatus.OK
