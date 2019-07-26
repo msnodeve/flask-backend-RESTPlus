@@ -7,5 +7,3 @@ python:
 install:
   - docker-compose up -d
   - pipenv install --dev
-  - make database
-  - python manage.py run
